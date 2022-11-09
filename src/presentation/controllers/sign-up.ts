@@ -4,7 +4,12 @@ import { MissingParamError } from './errors/missing-param-error';
 
 export class SignUpController {
   handle(httpRequest: HttpRequest): HttpResponse {
-    const requiredFields = ['name', 'email', 'password'];
+    const requiredFields = [
+      'name',
+      'email',
+      'password',
+      'passwordConfirmation',
+    ];
 
     // eslint-disable-next-line no-restricted-syntax
     for (const fieldName of requiredFields) {
