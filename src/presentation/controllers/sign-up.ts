@@ -12,6 +12,14 @@ export class SignUpController {
       return badRequest(new MissingParamError('email'));
     }
 
+    const requiredFields = ['name', 'email'];
+
+    requiredFields.forEach(fieldName => {
+      if (!httpRequest.body[fieldName]) {
+        return badRequest(new MissingParamError(fieldName));
+      }
+    });
+
     return {
       statusCode: 200,
       body: 'ok',
