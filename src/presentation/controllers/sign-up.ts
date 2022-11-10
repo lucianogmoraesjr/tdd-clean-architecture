@@ -1,4 +1,4 @@
-import { badRequest } from '../helpers/http-helper';
+import { badRequest, serverError } from '../helpers/http-helper';
 import { Controller } from '../protocols/controller';
 import { EmailValidator } from '../protocols/email-validator';
 import { HttpRequest, HttpResponse } from '../protocols/http';
@@ -36,10 +36,7 @@ export class SignUpController implements Controller {
         body: 'ok',
       };
     } catch {
-      return {
-        statusCode: 500,
-        body: new ServerError(),
-      };
+      return serverError();
     }
   }
 }
