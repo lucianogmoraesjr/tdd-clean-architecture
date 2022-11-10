@@ -1,12 +1,16 @@
 /* eslint-disable max-classes-per-file */
-import { Account } from '../../domain/entities/account';
+import { Account } from '../../../domain/entities/account';
 import {
   CreateAccount,
   CreateAccountDTO,
-} from '../../domain/use-cases/create-account';
-import { EmailValidator } from '../protocols';
-import { MissingParamError, InvalidParamError, ServerError } from './errors';
+} from '../../../domain/use-cases/create-account';
+import {
+  InvalidParamError,
+  MissingParamError,
+  ServerError,
+} from '../../errors';
 import { SignUpController } from './sign-up';
+import { EmailValidator } from './sign-up-protocols';
 
 const makeEmailValidatorStub = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
