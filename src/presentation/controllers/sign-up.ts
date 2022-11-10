@@ -1,3 +1,4 @@
+import { CreateAccount } from '../../domain/use-cases/create-account';
 import { badRequest, serverError } from '../helpers/http-helper';
 import {
   Controller,
@@ -8,7 +9,10 @@ import {
 import { MissingParamError, InvalidParamError } from './errors';
 
 export class SignUpController implements Controller {
-  constructor(private readonly emailValidator: EmailValidator) {}
+  constructor(
+    private readonly emailValidator: EmailValidator,
+    private readonly createAccount: CreateAccount,
+  ) {}
 
   handle(httpRequest: HttpRequest): HttpResponse {
     try {
@@ -26,7 +30,7 @@ export class SignUpController implements Controller {
         }
       }
 
-      const { password, passwordConfirmation, email } = httpRequest.body;
+      const { name, email, password, passwordConfirmation } = httpRequest.body;
 
       if (password !== passwordConfirmation) {
         return badRequest(new InvalidParamError('passwordConfirmation'));
@@ -37,6 +41,13 @@ export class SignUpController implements Controller {
       if (!isEmailValid) {
         return badRequest(new InvalidParamError('email'));
       }
+
+      this.createAccount.execute({
+        name,
+        email,
+        password,
+        passwordConfirmation,
+      });
 
       return {
         statusCode: 200,
