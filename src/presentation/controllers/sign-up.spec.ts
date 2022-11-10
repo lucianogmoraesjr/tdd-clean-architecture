@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-classes-per-file
 import { EmailValidator } from '../protocols';
 import { MissingParamError, InvalidParamError, ServerError } from './errors';
 import { SignUpController } from './sign-up';
@@ -16,16 +15,6 @@ const makeEmailValidatorStub = (): EmailValidator => {
   }
 
   return new EmailValidatorStub();
-};
-
-const makeEmailValidatorStubWithError = (): EmailValidator => {
-  class EmailValidatorStubWithError implements EmailValidator {
-    isValid(email: string): boolean {
-      throw new Error();
-    }
-  }
-
-  return new EmailValidatorStubWithError();
 };
 
 const makeSut = (): SutTypes => {
@@ -148,8 +137,11 @@ describe('SignUp Controller', () => {
   });
 
   test('Should be able to return 500 if EmailValidator throws exception', () => {
-    const emailValidatorStubWithError = makeEmailValidatorStubWithError();
-    const sut = new SignUpController(emailValidatorStubWithError);
+    const { sut, emailValidatorStub } = makeSut();
+
+    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
+      throw new Error();
+    });
 
     const httpRequest = {
       body: {
