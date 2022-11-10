@@ -1,11 +1,12 @@
+/* eslint-disable max-classes-per-file */
+import { Account } from '../../domain/entities/account';
+import {
+  CreateAccount,
+  CreateAccountDTO,
+} from '../../domain/use-cases/create-account';
 import { EmailValidator } from '../protocols';
 import { MissingParamError, InvalidParamError, ServerError } from './errors';
 import { SignUpController } from './sign-up';
-
-interface SutTypes {
-  sut: SignUpController;
-  emailValidatorStub: EmailValidator;
-}
 
 const makeEmailValidatorStub = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -17,11 +18,35 @@ const makeEmailValidatorStub = (): EmailValidator => {
   return new EmailValidatorStub();
 };
 
+const makeCreateAccountStub = (): CreateAccount => {
+  class CreateAccountStub implements CreateAccount {
+    execute(account: CreateAccountDTO): Account {
+      const fakeAccount = {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email',
+        password: 'valid_password',
+      };
+
+      return fakeAccount;
+    }
+  }
+
+  return new CreateAccountStub();
+};
+
+interface SutTypes {
+  sut: SignUpController;
+  emailValidatorStub: EmailValidator;
+  createAccountStub: CreateAccount;
+}
+
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidatorStub();
-  const sut = new SignUpController(emailValidatorStub);
+  const createAccountStub = makeCreateAccountStub();
+  const sut = new SignUpController(emailValidatorStub, createAccountStub);
 
-  return { emailValidatorStub, sut };
+  return { emailValidatorStub, createAccountStub, sut };
 };
 
 describe('SignUp Controller', () => {
@@ -176,5 +201,32 @@ describe('SignUp Controller', () => {
 
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toEqual(new ServerError());
+  });
+
+  test('Should be able to call CreateAccount with correct data', () => {
+    const { sut, createAccountStub } = makeSut();
+
+    const createAccountStubExecuteSpy = jest.spyOn(
+      createAccountStub,
+      'execute',
+    );
+
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+      },
+    };
+
+    sut.handle(httpRequest);
+
+    expect(createAccountStubExecuteSpy).toHaveBeenCalledWith({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password',
+      passwordConfirmation: 'any_password',
+    });
   });
 });
