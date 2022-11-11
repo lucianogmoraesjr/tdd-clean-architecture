@@ -19,6 +19,7 @@
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
     "@types/jest": "^29.2.2",
+    "@types/validator": "^13.7.10",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
     "eslint": "^8.26.0",
@@ -33,5 +34,8 @@
     "prettier": "^2.7.1",
     "ts-jest": "^29.0.3",
     "typescript": "*"
+  },
+  "dependencies": {
+    "validator": "^13.7.0"
   }
 }
