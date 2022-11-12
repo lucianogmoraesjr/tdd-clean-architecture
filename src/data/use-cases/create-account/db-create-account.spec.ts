@@ -46,9 +46,7 @@ describe('DbCreateAccount UseCase', () => {
   test('Should be able to throw exception if Encrypter throws', () => {
     const { encrypterStub, sut } = makeSut();
 
-    const encryptSpy = jest
-      .spyOn(encrypterStub, 'encrypt')
-      .mockRejectedValueOnce(new Error());
+    jest.spyOn(encrypterStub, 'encrypt').mockRejectedValueOnce(new Error());
 
     const accountData = {
       name: 'valid_name',
