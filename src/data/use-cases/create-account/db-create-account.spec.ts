@@ -1,9 +1,16 @@
+/* eslint-disable max-classes-per-file */
 import { DbCreateAccount } from './db-create-account';
-import { Encrypter } from './db-create-account-protocols';
+import {
+  Account,
+  CreateAccountDTO,
+  Encrypter,
+  CreateAccountRepository,
+} from './db-create-account-protocols';
 
 interface SutTypes {
   sut: DbCreateAccount;
   encrypterStub: Encrypter;
+  createAccountRepositoryStub: CreateAccountRepository;
 }
 
 const makeEncrypterStub = (): Encrypter => {
@@ -16,13 +23,32 @@ const makeEncrypterStub = (): Encrypter => {
   return new EncrypterStub();
 };
 
+const makeCreateAccountRepositoryStub = (): CreateAccountRepository => {
+  class CreateAccountRepositoryStub implements CreateAccountRepository {
+    execute(account: CreateAccountDTO): Promise<Account> {
+      const fakeAcount = {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email',
+        password: 'valid_password',
+      };
+
+      return Promise.resolve(fakeAcount);
+    }
+  }
+
+  return new CreateAccountRepositoryStub();
+};
+
 const makeSut = (): SutTypes => {
   const encrypterStub = makeEncrypterStub();
-  const sut = new DbCreateAccount(encrypterStub);
+  const createAccountRepositoryStub = makeCreateAccountRepositoryStub();
+  const sut = new DbCreateAccount(encrypterStub, createAccountRepositoryStub);
 
   return {
     sut,
     encrypterStub,
+    createAccountRepositoryStub,
   };
 };
 
@@ -55,5 +81,28 @@ describe('DbCreateAccount UseCase', () => {
     };
 
     expect(sut.execute(accountData)).rejects.toThrow();
+  });
+
+  test('Should be able to call CreateAccountRepository with correct values', async () => {
+    const { createAccountRepositoryStub, sut } = makeSut();
+
+    const createAccountRepositorySpy = jest.spyOn(
+      createAccountRepositoryStub,
+      'execute',
+    );
+
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password',
+    };
+
+    await sut.execute(accountData);
+
+    expect(createAccountRepositorySpy).toHaveBeenCalledWith({
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'hashed_password',
+    });
   });
 });
