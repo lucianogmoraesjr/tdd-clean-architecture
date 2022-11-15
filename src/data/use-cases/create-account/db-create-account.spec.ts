@@ -105,4 +105,20 @@ describe('DbCreateAccount UseCase', () => {
       password: 'hashed_password',
     });
   });
+
+  test('Should be able to throw exception if CreateAccountRepository throws', () => {
+    const { createAccountRepositoryStub, sut } = makeSut();
+
+    jest
+      .spyOn(createAccountRepositoryStub, 'execute')
+      .mockRejectedValueOnce(new Error());
+
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password',
+    };
+
+    expect(sut.execute(accountData)).rejects.toThrow();
+  });
 });
