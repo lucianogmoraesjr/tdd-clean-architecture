@@ -1,9 +1,9 @@
-import { Account } from '../../../domain/entities/account';
 import {
   CreateAccount,
+  Encrypter,
   CreateAccountDTO,
-} from '../../../domain/use-cases/create-account';
-import { Encrypter } from '../../protocols/encrypter';
+  Account,
+} from './db-create-account-protocols';
 
 export class DbCreateAccount implements CreateAccount {
   constructor(private readonly encrypter: Encrypter) {}
