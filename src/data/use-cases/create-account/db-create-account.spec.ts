@@ -26,14 +26,14 @@ const makeEncrypterStub = (): Encrypter => {
 const makeCreateAccountRepositoryStub = (): CreateAccountRepository => {
   class CreateAccountRepositoryStub implements CreateAccountRepository {
     execute(account: CreateAccountDTO): Promise<Account> {
-      const fakeAcount = {
+      const fakeAccount = {
         id: 'valid_id',
         name: 'valid_name',
         email: 'valid_email',
-        password: 'valid_password',
+        password: 'hashed_password',
       };
 
-      return Promise.resolve(fakeAcount);
+      return Promise.resolve(fakeAccount);
     }
   }
 
@@ -106,12 +106,8 @@ describe('DbCreateAccount UseCase', () => {
     });
   });
 
-  test('Should be able to throw exception if CreateAccountRepository throws', () => {
-    const { createAccountRepositoryStub, sut } = makeSut();
-
-    jest
-      .spyOn(createAccountRepositoryStub, 'execute')
-      .mockRejectedValueOnce(new Error());
+  test('Should be able to return an account on success', async () => {
+    const { sut } = makeSut();
 
     const accountData = {
       name: 'valid_name',
@@ -119,6 +115,13 @@ describe('DbCreateAccount UseCase', () => {
       password: 'valid_password',
     };
 
-    expect(sut.execute(accountData)).rejects.toThrow();
+    const newAccount = await sut.execute(accountData);
+
+    expect(newAccount).toEqual({
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'hashed_password',
+    });
   });
 });
