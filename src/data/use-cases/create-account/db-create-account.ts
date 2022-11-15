@@ -12,16 +12,13 @@ export class DbCreateAccount implements CreateAccount {
     private readonly createAccountRepository: CreateAccountRepository,
   ) {}
 
-  async execute(account: CreateAccountDTO): Promise<Account> {
-    const hashedPassword = await this.encrypter.encrypt(account.password);
+  async execute(accountData: CreateAccountDTO): Promise<Account> {
+    const hashedPassword = await this.encrypter.encrypt(accountData.password);
 
-    const newAccount = { ...account, password: hashedPassword };
+    const newAccount = { ...accountData, password: hashedPassword };
 
-    await this.createAccountRepository.execute(newAccount);
+    const account = await this.createAccountRepository.execute(newAccount);
 
-    return {
-      ...newAccount,
-      id: '1',
-    };
+    return account;
   }
 }
