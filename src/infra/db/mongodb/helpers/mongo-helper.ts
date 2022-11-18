@@ -4,11 +4,11 @@ class MongoHelper {
   client: MongoClient;
 
   constructor() {
-    this.client = new MongoClient('mongodb://localhost:27017');
-  }
-
-  async connect() {
-    await this.client.connect();
+    this.client = new MongoClient(
+      process.env.NODE_ENV === 'test'
+        ? 'mongodb://localhost:27017/test'
+        : 'mongodb://localhost:27017/tdd-clean-architecture',
+    );
   }
 
   async disconnect() {
