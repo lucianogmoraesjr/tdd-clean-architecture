@@ -11,6 +11,7 @@ import {
   MissingParamError,
   ServerError,
 } from '../../errors';
+import { serverError } from '../../helpers/http-helper';
 
 const makeEmailValidatorStub = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -203,7 +204,7 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(httpRequest);
 
     expect(httpResponse.statusCode).toBe(500);
-    expect(httpResponse.body).toEqual(new ServerError());
+    expect(httpResponse.body).toEqual(serverError(new Error()).body);
   });
 
   test('Should be able to call CreateAccount with correct data', async () => {
@@ -251,7 +252,7 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(httpRequest);
 
     expect(httpResponse.statusCode).toBe(500);
-    expect(httpResponse.body).toEqual(new ServerError());
+    expect(httpResponse.body).toEqual(serverError(new Error()).body);
   });
 
   test('Should be able to return 200 if valid data is provided', async () => {
