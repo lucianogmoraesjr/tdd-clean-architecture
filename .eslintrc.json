@@ -25,6 +25,7 @@
     "consistent-return": "off",
     "no-useless-constructor": "off",
     "import/no-extraneous-dependencies": "off",
+    "no-use-before-define": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
