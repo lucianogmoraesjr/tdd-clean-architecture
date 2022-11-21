@@ -8,8 +8,12 @@ export class AccountMongoRepository implements CreateAccountRepository {
   async execute(account: CreateAccountDTO): Promise<Account> {
     const accountCollection = MongoHelper.getCollection('accounts');
 
-    const result = await accountCollection.insertOne(account);
+    await accountCollection.insertOne(account);
 
-    return { ...account, id: result.insertedId.toString() };
+    const { _id, ...rest } = account as any;
+
+    const newAccount = { ...rest, id: _id.toString() };
+
+    return newAccount;
   }
 }
