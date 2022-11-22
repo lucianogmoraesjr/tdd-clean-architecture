@@ -31,7 +31,8 @@ module.exports = {
   // An array of regexp pattern strings used to skip coverage collection
   coveragePathIgnorePatterns: [
     "/node_modules/",
-    "<rootDir>/src/infra/db/mongodb/helpers/mongo-helper.ts"
+    "<rootDir>/src/infra/db/mongodb/helpers/mongo-helper.ts",
+    "<rootDir>/src/presentation/helpers/http-helper.ts"
   ],
 
   // Indicates which provider should be used to instrument code for coverage
