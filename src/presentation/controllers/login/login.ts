@@ -7,11 +7,13 @@ export class LoginController implements Controller {
   constructor(private readonly emailValidator: EmailValidator) {}
 
   handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    if (!httpRequest.body.email) {
+    const { email, password } = httpRequest.body;
+
+    if (!email) {
       return Promise.resolve(badRequest(new MissingParamError('email')));
     }
 
-    if (!httpRequest.body.password) {
+    if (!password) {
       return Promise.resolve(badRequest(new MissingParamError('password')));
     }
 
