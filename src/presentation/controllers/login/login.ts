@@ -8,6 +8,7 @@ import {
 } from './login-protocols';
 import {
   badRequest,
+  ok,
   serverError,
   unauthorized,
 } from '../../helpers/http-helper';
@@ -42,10 +43,7 @@ export class LoginController implements Controller {
         return unauthorized();
       }
 
-      return Promise.resolve({
-        statusCode: 200,
-        body: 'ok',
-      });
+      return ok({ accessToken });
     } catch (error) {
       return serverError(error as Error);
     }
