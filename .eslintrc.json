@@ -26,6 +26,7 @@
     "no-useless-constructor": "off",
     "import/no-extraneous-dependencies": "off",
     "no-use-before-define": "off",
+    "no-restricted-syntax": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
