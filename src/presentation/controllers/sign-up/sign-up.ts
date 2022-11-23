@@ -2,16 +2,19 @@ import { CreateAccount } from '../../../domain/use-cases/create-account';
 import { badRequest, ok, serverError } from '../../helpers/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '../../protocols';
 import { MissingParamError, InvalidParamError } from '../../errors';
-import { EmailValidator } from './sign-up-protocols';
+import { EmailValidator, Validation } from './sign-up-protocols';
 
 export class SignUpController implements Controller {
   constructor(
     private readonly emailValidator: EmailValidator,
     private readonly createAccount: CreateAccount,
+    private readonly validation: Validation,
   ) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
+      this.validation.validate(httpRequest.body);
+
       const requiredFields = [
         'name',
         'email',
