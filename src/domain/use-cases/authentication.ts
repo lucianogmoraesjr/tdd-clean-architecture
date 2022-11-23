@@ -1,3 +1,8 @@
+export interface AuthenticationDTO {
+  email: string;
+  password: string;
+}
+
 export interface Authentication {
-  execute(email: string, password: string): Promise<string | null>;
+  execute(data: AuthenticationDTO): Promise<string | null>;
 }

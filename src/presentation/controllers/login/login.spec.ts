@@ -1,6 +1,11 @@
 /* eslint-disable max-classes-per-file */
 import { LoginController } from './login';
-import { HttpRequest, Authentication, Validation } from './login-protocols';
+import {
+  HttpRequest,
+  Authentication,
+  Validation,
+  AuthenticationDTO,
+} from './login-protocols';
 import { MissingParamError } from '../../errors';
 import {
   badRequest,
@@ -27,7 +32,7 @@ const makeValidationStub = (): Validation => {
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    execute(email: string, password: string): Promise<string> {
+    execute(data: AuthenticationDTO): Promise<string> {
       return Promise.resolve('any_token');
     }
   }
@@ -64,10 +69,10 @@ describe('Login Controller', () => {
 
     await sut.handle(makeRequest());
 
-    expect(isValidSpy).toHaveBeenCalledWith(
-      'any_email@mail.com',
-      'any_password',
-    );
+    expect(isValidSpy).toHaveBeenCalledWith({
+      email: 'any_email@mail.com',
+      password: 'any_password',
+    });
   });
 
   test('Should be able to return 401 if invalid credentials are provided', async () => {
