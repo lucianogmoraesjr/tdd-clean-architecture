@@ -1,4 +1,4 @@
-import { CreateAccountRepository } from '../../../../data/protocols/create-account-repository';
+import { CreateAccountRepository } from '../../../../data/protocols/db/create-account-repository';
 import { Account } from '../../../../domain/entities/account';
 import { CreateAccountDTO } from '../../../../domain/use-cases/create-account';
 

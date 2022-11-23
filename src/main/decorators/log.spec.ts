@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { LogErrorRepository } from '../../data/protocols/log-error-repository';
+import { LogErrorRepository } from '../../data/protocols/db/log-error-repository';
 import { Account } from '../../domain/entities/account';
 import { ok, serverError } from '../../presentation/helpers/http/http-helper';
 import {

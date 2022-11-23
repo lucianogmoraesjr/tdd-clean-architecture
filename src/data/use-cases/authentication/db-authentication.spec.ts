@@ -1,6 +1,6 @@
 import { Account } from '../../../domain/entities/account';
 import { AuthenticationDTO } from '../../../domain/use-cases/authentication';
-import { LoadAccountByEmailRepository } from '../../protocols/load-account-by-email-repository';
+import { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository';
 import { DbAuthentication } from './db-authentication';
 
 const makeFakeAccount = (): Account => {
