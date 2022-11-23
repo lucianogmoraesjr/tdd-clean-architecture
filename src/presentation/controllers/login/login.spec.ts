@@ -117,6 +117,19 @@ describe('Login Controller', () => {
     expect(httpResponse).toEqual(serverError(new Error()));
   });
 
+  test('Should be able to call Authentication with correct value', async () => {
+    const { sut, authenticationStub } = makeSut();
+
+    const isValidSpy = jest.spyOn(authenticationStub, 'execute');
+
+    await sut.handle(makeRequest());
+
+    expect(isValidSpy).toHaveBeenCalledWith(
+      'any_email@mail.com',
+      'any_password',
+    );
+  });
+
   test('Should be able to return 401 if invalid credentials are provided', async () => {
     const { sut, authenticationStub } = makeSut();
 
