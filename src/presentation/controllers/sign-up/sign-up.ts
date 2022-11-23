@@ -1,5 +1,5 @@
 import { CreateAccount } from '../../../domain/use-cases/create-account';
-import { badRequest, ok, serverError } from '../../helpers/http-helper';
+import { badRequest, ok, serverError } from '../../helpers/http/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '../../protocols';
 import { Validation } from './sign-up-protocols';
 

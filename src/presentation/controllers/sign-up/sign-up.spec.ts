@@ -2,7 +2,7 @@
 import { Account } from '../../../domain/entities/account';
 import { HttpRequest, Validation } from './sign-up-protocols';
 import { SignUpController } from './sign-up';
-import { serverError, ok, badRequest } from '../../helpers/http-helper';
+import { serverError, ok, badRequest } from '../../helpers/http/http-helper';
 import { MissingParamError, ServerError } from '../../errors';
 
 import {
