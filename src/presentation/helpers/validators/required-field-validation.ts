@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { MissingParamError } from '../../errors';
 import { Validation } from './validation';
 

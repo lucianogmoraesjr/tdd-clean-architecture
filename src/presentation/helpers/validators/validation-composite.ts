@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { Validation } from './validation';
 
 export class ValidationComposite implements Validation {
