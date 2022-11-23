@@ -56,4 +56,14 @@ describe('DbAuthentication', () => {
 
     expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com');
   });
+
+  test('Should be able to throw if LoadAccountByEmailRepository throws an exception', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut();
+
+    jest
+      .spyOn(loadAccountByEmailRepositoryStub, 'execute')
+      .mockRejectedValueOnce(new Error());
+
+    await expect(sut.execute(makeFakeRequest())).rejects.toThrow();
+  });
 });
