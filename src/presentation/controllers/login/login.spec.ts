@@ -1,14 +1,12 @@
 /* eslint-disable max-classes-per-file */
 import { LoginController } from './login';
+import { HttpRequest, Authentication, EmailValidator } from './login-protocols';
+import { InvalidParamError, MissingParamError } from '../../errors';
 import {
   badRequest,
   serverError,
   unauthorized,
 } from '../../helpers/http-helper';
-import { InvalidParamError, MissingParamError } from '../../errors';
-import { HttpRequest } from '../../protocols';
-import { EmailValidator } from '../sign-up/sign-up-protocols';
-import { Authentication } from '../../../domain/use-cases/authentication';
 
 interface SutTypes {
   sut: LoginController;
