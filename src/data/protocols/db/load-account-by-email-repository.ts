@@ -1,5 +1,5 @@
 import { Account } from '../../../domain/entities/account';
 
 export interface LoadAccountByEmailRepository {
-  execute(email: string): Promise<Account>;
+  execute(email: string): Promise<Account | null>;
 }
