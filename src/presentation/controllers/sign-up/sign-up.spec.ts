@@ -1,13 +1,14 @@
 /* eslint-disable max-classes-per-file */
 import { Account } from '../../../domain/entities/account';
-import { EmailValidator, HttpRequest } from './sign-up-protocols';
+import { EmailValidator, HttpRequest, Validation } from './sign-up-protocols';
 import { SignUpController } from './sign-up';
+import { serverError, ok, badRequest } from '../../helpers/http-helper';
 import {
   InvalidParamError,
   MissingParamError,
   ServerError,
 } from '../../errors';
-import { serverError, ok, badRequest } from '../../helpers/http-helper';
+
 import {
   CreateAccount,
   CreateAccountDTO,
@@ -33,6 +34,16 @@ const makeCreateAccountStub = (): CreateAccount => {
   return new CreateAccountStub();
 };
 
+const makeValidationStub = (): Validation => {
+  class ValidationStub implements Validation {
+    validate(input: any): Error | null {
+      return null;
+    }
+  }
+
+  return new ValidationStub();
+};
+
 const makeFakeAccount = (): Account => ({
   id: 'valid_id',
   name: 'valid_name',
@@ -53,14 +64,20 @@ interface SutTypes {
   sut: SignUpController;
   emailValidatorStub: EmailValidator;
   createAccountStub: CreateAccount;
+  validationStub: Validation;
 }
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidatorStub();
   const createAccountStub = makeCreateAccountStub();
-  const sut = new SignUpController(emailValidatorStub, createAccountStub);
+  const validationStub = makeValidationStub();
+  const sut = new SignUpController(
+    emailValidatorStub,
+    createAccountStub,
+    validationStub,
+  );
 
-  return { emailValidatorStub, createAccountStub, sut };
+  return { emailValidatorStub, createAccountStub, validationStub, sut };
 };
 
 describe('SignUp Controller', () => {
@@ -216,5 +233,17 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(makeFakeRequest());
 
     expect(httpResponse).toEqual(ok(makeFakeAccount()));
+  });
+
+  test('Should be able to call Validation with correct values', async () => {
+    const { sut, validationStub } = makeSut();
+
+    const validateSpy = jest.spyOn(validationStub, 'validate');
+
+    const httpRequest = makeFakeRequest();
+
+    await sut.handle(httpRequest);
+
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body);
   });
 });
