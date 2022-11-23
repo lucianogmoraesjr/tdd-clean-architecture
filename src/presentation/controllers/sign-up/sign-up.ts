@@ -19,20 +19,6 @@ export class SignUpController implements Controller {
         return badRequest(error);
       }
 
-      const requiredFields = [
-        'name',
-        'email',
-        'password',
-        'passwordConfirmation',
-      ];
-
-      // eslint-disable-next-line no-restricted-syntax
-      for (const fieldName of requiredFields) {
-        if (!httpRequest.body[fieldName]) {
-          return badRequest(new MissingParamError(fieldName));
-        }
-      }
-
       const { name, email, password, passwordConfirmation } = httpRequest.body;
 
       if (password !== passwordConfirmation) {
