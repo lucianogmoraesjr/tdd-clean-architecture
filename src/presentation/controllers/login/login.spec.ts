@@ -1,12 +1,19 @@
+/* eslint-disable max-classes-per-file */
 import { LoginController } from './login';
-import { badRequest, serverError } from '../../helpers/http-helper';
+import {
+  badRequest,
+  serverError,
+  unauthorized,
+} from '../../helpers/http-helper';
 import { InvalidParamError, MissingParamError } from '../../errors';
 import { HttpRequest } from '../../protocols';
 import { EmailValidator } from '../sign-up/sign-up-protocols';
+import { Authentication } from '../../../domain/use-cases/authentication';
 
 interface SutTypes {
   sut: LoginController;
   emailValidatorStub: EmailValidator;
+  authenticationStub: Authentication;
 }
 
 const makeEmailValidator = (): EmailValidator => {
@@ -17,6 +24,16 @@ const makeEmailValidator = (): EmailValidator => {
   }
 
   return new EmailValidatorStub();
+};
+
+const makeAuthentication = (): Authentication => {
+  class AuthenticationStub implements Authentication {
+    execute(email: string, password: string): Promise<string> {
+      return Promise.resolve('any_token');
+    }
+  }
+
+  return new AuthenticationStub();
 };
 
 const makeRequest = (): HttpRequest => {
@@ -30,11 +47,13 @@ const makeRequest = (): HttpRequest => {
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator();
-  const sut = new LoginController(emailValidatorStub);
+  const authenticationStub = makeAuthentication();
+  const sut = new LoginController(emailValidatorStub, authenticationStub);
 
   return {
     sut,
     emailValidatorStub,
+    authenticationStub,
   };
 };
 
@@ -97,5 +116,15 @@ describe('Login Controller', () => {
     const httpResponse = await sut.handle(makeRequest());
 
     expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
+  test('Should be able to return 401 if invalid credentials are provided', async () => {
+    const { sut, authenticationStub } = makeSut();
+
+    jest.spyOn(authenticationStub, 'execute').mockResolvedValueOnce(null);
+
+    const httpResponse = await sut.handle(makeRequest());
+
+    expect(httpResponse).toEqual(unauthorized());
   });
 });
