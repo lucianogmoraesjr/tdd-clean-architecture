@@ -15,7 +15,7 @@ interface SutTypes {
 
 const makeHasherStub = (): Hasher => {
   class HasherStub implements Hasher {
-    async execute(value: string): Promise<string> {
+    async hash(value: string): Promise<string> {
       return Promise.resolve('hashed_password');
     }
   }
@@ -56,7 +56,7 @@ describe('DbCreateAccount UseCase', () => {
   test('Should be able to call Hasher with correct password', async () => {
     const { hasherStub, sut } = makeSut();
 
-    const encryptSpy = jest.spyOn(hasherStub, 'execute');
+    const encryptSpy = jest.spyOn(hasherStub, 'hash');
 
     const accountData = {
       name: 'valid_name',
@@ -72,7 +72,7 @@ describe('DbCreateAccount UseCase', () => {
   test('Should be able to throw exception if Hasher throws', () => {
     const { hasherStub, sut } = makeSut();
 
-    jest.spyOn(hasherStub, 'execute').mockRejectedValueOnce(new Error());
+    jest.spyOn(hasherStub, 'hash').mockRejectedValueOnce(new Error());
 
     const accountData = {
       name: 'valid_name',

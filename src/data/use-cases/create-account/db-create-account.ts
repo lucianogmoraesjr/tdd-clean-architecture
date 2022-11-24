@@ -13,7 +13,7 @@ export class DbCreateAccount implements CreateAccount {
   ) {}
 
   async execute(accountData: CreateAccountDTO): Promise<Account> {
-    const hashedPassword = await this.hasher.execute(accountData.password);
+    const hashedPassword = await this.hasher.hash(accountData.password);
 
     const newAccount = { ...accountData, password: hashedPassword };
 
