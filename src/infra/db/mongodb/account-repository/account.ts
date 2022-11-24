@@ -5,7 +5,7 @@ import { CreateAccountDTO } from '../../../../domain/use-cases/create-account';
 import MongoHelper from '../helpers/mongo-helper';
 
 export class AccountMongoRepository implements CreateAccountRepository {
-  async execute(account: CreateAccountDTO): Promise<Account> {
+  async create(account: CreateAccountDTO): Promise<Account> {
     const accountCollection = MongoHelper.getCollection('accounts');
 
     await accountCollection.insertOne(account);

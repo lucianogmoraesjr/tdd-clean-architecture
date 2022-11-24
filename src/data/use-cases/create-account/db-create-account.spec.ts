@@ -25,7 +25,7 @@ const makeHasherStub = (): Hasher => {
 
 const makeCreateAccountRepositoryStub = (): CreateAccountRepository => {
   class CreateAccountRepositoryStub implements CreateAccountRepository {
-    execute(account: CreateAccountDTO): Promise<Account> {
+    create(account: CreateAccountDTO): Promise<Account> {
       const fakeAccount = {
         id: 'valid_id',
         name: 'valid_name',
@@ -88,7 +88,7 @@ describe('DbCreateAccount UseCase', () => {
 
     const createAccountRepositorySpy = jest.spyOn(
       createAccountRepositoryStub,
-      'execute',
+      'create',
     );
 
     const accountData = {

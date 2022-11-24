@@ -15,7 +15,7 @@ describe('Account Mongo Repository', () => {
   test('Should be able to return an account on success', async () => {
     const sut = new AccountMongoRepository();
 
-    const account = await sut.execute({
+    const account = await sut.create({
       name: 'any_name',
       email: 'any_email',
       password: 'any_password',
