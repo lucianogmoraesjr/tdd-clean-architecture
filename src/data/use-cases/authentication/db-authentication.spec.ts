@@ -51,7 +51,7 @@ const makeHashComparer = (): HashComparer => {
 
 const makeEncrypter = (): Encrypter => {
   class EncrypterStub implements Encrypter {
-    async execute(id: string): Promise<string> {
+    async encrypt(id: string): Promise<string> {
       return Promise.resolve('any_token');
     }
   }
@@ -162,7 +162,7 @@ describe('DbAuthentication', () => {
   test('Should be able to call Encrypter with correct id', async () => {
     const { sut, encrypterStub } = makeSut();
 
-    const generatorSpy = jest.spyOn(encrypterStub, 'execute');
+    const generatorSpy = jest.spyOn(encrypterStub, 'encrypt');
 
     await sut.execute(makeFakeRequest());
 
@@ -172,7 +172,7 @@ describe('DbAuthentication', () => {
   test('Should be able to throw if Encrypter throws an exception', async () => {
     const { sut, encrypterStub } = makeSut();
 
-    jest.spyOn(encrypterStub, 'execute').mockRejectedValueOnce(new Error());
+    jest.spyOn(encrypterStub, 'encrypt').mockRejectedValueOnce(new Error());
 
     await expect(sut.execute(makeFakeRequest())).rejects.toThrow();
   });
