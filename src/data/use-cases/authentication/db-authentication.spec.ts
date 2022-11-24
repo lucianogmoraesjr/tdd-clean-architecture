@@ -1,5 +1,7 @@
+/* eslint-disable max-classes-per-file */
 import { Account } from '../../../domain/entities/account';
 import { AuthenticationDTO } from '../../../domain/use-cases/authentication';
+import { HashComparer } from '../../protocols/cryptography/hash-comparer';
 import { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository';
 import { DbAuthentication } from './db-authentication';
 
@@ -8,7 +10,7 @@ const makeFakeAccount = (): Account => {
     id: 'any_id',
     name: 'any_name',
     email: 'any_email@mail.com',
-    password: 'any_password',
+    password: 'hashed_password',
   };
   return account;
 };
@@ -32,17 +34,34 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   return new LoadAccountByEmailRepositoryStub();
 };
 
+const makeHashComparer = (): HashComparer => {
+  class HashComparerStub implements HashComparer {
+    async execute(value: string, hash: string): Promise<boolean> {
+      return Promise.resolve(true);
+    }
+  }
+
+  return new HashComparerStub();
+};
+
 interface SutTypes {
   sut: DbAuthentication;
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository;
+  hashComparerStub: HashComparer;
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository();
-  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub);
+  const hashComparerStub = makeHashComparer();
+  const sut = new DbAuthentication(
+    loadAccountByEmailRepositoryStub,
+    hashComparerStub,
+  );
+
   return {
     sut,
     loadAccountByEmailRepositoryStub,
+    hashComparerStub,
   };
 };
 
@@ -77,5 +96,15 @@ describe('DbAuthentication', () => {
     const accessToken = await sut.execute(makeFakeRequest());
 
     expect(accessToken).toBeNull();
+  });
+
+  test('Should be able to call HashComparer with correct value', async () => {
+    const { sut, hashComparerStub } = makeSut();
+
+    const comparerSpy = jest.spyOn(hashComparerStub, 'execute');
+
+    await sut.execute(makeFakeRequest());
+
+    expect(comparerSpy).toHaveBeenCalledWith('any_password', 'hashed_password');
   });
 });
