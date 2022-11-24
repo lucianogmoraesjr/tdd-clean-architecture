@@ -1,6 +1,6 @@
 import {
   CreateAccount,
-  Encrypter,
+  Hasher,
   CreateAccountDTO,
   Account,
   CreateAccountRepository,
@@ -8,12 +8,12 @@ import {
 
 export class DbCreateAccount implements CreateAccount {
   constructor(
-    private readonly encrypter: Encrypter,
+    private readonly hasher: Hasher,
     private readonly createAccountRepository: CreateAccountRepository,
   ) {}
 
   async execute(accountData: CreateAccountDTO): Promise<Account> {
-    const hashedPassword = await this.encrypter.encrypt(accountData.password);
+    const hashedPassword = await this.hasher.execute(accountData.password);
 
     const newAccount = { ...accountData, password: hashedPassword };
 
