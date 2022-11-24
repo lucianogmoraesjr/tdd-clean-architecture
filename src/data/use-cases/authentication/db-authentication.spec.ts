@@ -4,9 +4,9 @@ import { DbAuthentication } from './db-authentication';
 import {
   Account,
   AuthenticationDTO,
-  LoadAccountByEmailRepository,
   HashComparer,
   Encrypter,
+  LoadAccountByEmailRepository,
   UpdateAccessTokenRepository,
 } from './db-authentication-protocols';
 

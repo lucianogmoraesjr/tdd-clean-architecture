@@ -1,7 +1,7 @@
 import { CreateAccount } from '../../../domain/use-cases/create-account';
 import { badRequest, ok, serverError } from '../../helpers/http/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '../../protocols';
-import { Validation } from './sign-up-protocols';
+import { Validation } from './sign-up-controller-protocols';
 
 export class SignUpController implements Controller {
   constructor(
