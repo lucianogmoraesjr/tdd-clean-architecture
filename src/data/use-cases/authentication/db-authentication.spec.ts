@@ -1,11 +1,14 @@
 /* eslint-disable max-classes-per-file */
-import { Account } from '../../../domain/entities/account';
-import { AuthenticationDTO } from '../../../domain/use-cases/authentication';
-import { HashComparer } from '../../protocols/cryptography/hash-comparer';
-import { TokenGenerator } from '../../protocols/cryptography/token-generator';
-import { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository';
-import { UpdateAccessTokenRepository } from '../../protocols/db/update-access-token-repository';
+
 import { DbAuthentication } from './db-authentication';
+import {
+  Account,
+  AuthenticationDTO,
+  LoadAccountByEmailRepository,
+  HashComparer,
+  TokenGenerator,
+  UpdateAccessTokenRepository,
+} from './db-authentication-protocols';
 
 const makeFakeAccount = (): Account => {
   const account: Account = {
