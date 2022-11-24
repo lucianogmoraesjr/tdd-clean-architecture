@@ -1,12 +1,16 @@
 import { CreateAccountRepository } from '../../../../data/protocols/db/create-account-repository';
 import { LoadAccountByEmailRepository } from '../../../../data/protocols/db/load-account-by-email-repository';
+import { UpdateAccessTokenRepository } from '../../../../data/protocols/db/update-access-token-repository';
 import { Account } from '../../../../domain/entities/account';
 import { CreateAccountDTO } from '../../../../domain/use-cases/create-account';
 
 import MongoHelper from '../helpers/mongo-helper';
 
 export class AccountMongoRepository
-  implements CreateAccountRepository, LoadAccountByEmailRepository
+  implements
+    CreateAccountRepository,
+    LoadAccountByEmailRepository,
+    UpdateAccessTokenRepository
 {
   async create(account: CreateAccountDTO): Promise<Account> {
     const accountCollection = MongoHelper.getCollection('accounts');
@@ -36,5 +40,19 @@ export class AccountMongoRepository
     };
 
     return account;
+  }
+
+  async updateAccessToken(id: string, token: string): Promise<void> {
+    const accountCollection = MongoHelper.getCollection('accounts');
+    await accountCollection.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          accessToken: token,
+        },
+      },
+    );
   }
 }
