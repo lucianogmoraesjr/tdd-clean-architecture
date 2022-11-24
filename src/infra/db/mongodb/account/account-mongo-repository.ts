@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { LoadAccountByEmailRepository } from '../../../../data/protocols/db/account/load-account-by-email-repository';
 import { UpdateAccessTokenRepository } from '../../../../data/protocols/db/account/update-access-token-repository';
 import { CreateAccountRepository } from '../../../../data/use-cases/create-account/db-create-account-protocols';
@@ -46,7 +47,7 @@ export class AccountMongoRepository
     const accountCollection = MongoHelper.getCollection('accounts');
     await accountCollection.updateOne(
       {
-        _id: id,
+        _id: new ObjectId(id),
       },
       {
         $set: {

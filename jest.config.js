@@ -32,7 +32,7 @@ module.exports = {
   coveragePathIgnorePatterns: [
     "/node_modules/",
     "<rootDir>/src/infra/db/mongodb/helpers/mongo-helper.ts",
-    "<rootDir>/src/presentation/helpers/http-helper.ts"
+    "<rootDir>/src/presentation/helpers/http/http-helper.ts"
   ],
 
   // Indicates which provider should be used to instrument code for coverage
