@@ -18,7 +18,7 @@ const makeSut = (): BcryptAdapter => {
 };
 
 describe('Bcrypt Adapter', () => {
-  test('Should be able to call bcrypt with correct values', async () => {
+  test('Should be able to call bcrypt hash with correct values', async () => {
     const sut = makeSut();
 
     const hashSpy = jest.spyOn(bcrypt, 'hash');
@@ -36,7 +36,14 @@ describe('Bcrypt Adapter', () => {
     expect(hashedValue).toBe('hashed_value');
   });
 
-  test('Should be able to call bcrypt with correct values', async () => {
+  test('Should be able to throw if hash throws an exception', async () => {
+    const bcryptHash = jest.fn().mockRejectedValue(new Error());
+    (bcrypt.hash as jest.Mock) = bcryptHash;
+
+    await expect(bcryptHash('any_value')).rejects.toThrow();
+  });
+
+  test('Should be able to call bcrypt compare with correct values', async () => {
     const sut = makeSut();
 
     const compareSpy = jest.spyOn(bcrypt, 'compare');
@@ -64,5 +71,12 @@ describe('Bcrypt Adapter', () => {
     const isValid = await sut.compare('any_value', 'any_hash');
 
     expect(isValid).toBe(false);
+  });
+
+  test('Should be able to throw if compare throws an exception', async () => {
+    const bcryptCompare = jest.fn().mockRejectedValue(new Error());
+    (bcrypt.compare as jest.Mock) = bcryptCompare;
+
+    await expect(bcryptCompare('any_value', 'any_hash')).rejects.toThrow();
   });
 });
