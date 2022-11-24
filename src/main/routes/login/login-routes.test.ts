@@ -33,4 +33,14 @@ describe('Login Routes', () => {
       })
       .expect(200);
   });
+
+  test('Should be able to return 401 unauthorized if credentials are invalid', async () => {
+    await request(app)
+      .post('/api/login')
+      .send({
+        email: 'john@mail.com',
+        password: '123',
+      })
+      .expect(401);
+  });
 });
