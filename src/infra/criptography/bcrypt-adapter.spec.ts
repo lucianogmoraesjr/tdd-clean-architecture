@@ -5,6 +5,10 @@ jest.mock('bcrypt', () => ({
   async hash(): Promise<string> {
     return Promise.resolve('hashed_value');
   },
+
+  async compare(): Promise<boolean> {
+    return Promise.resolve(true);
+  },
 }));
 
 const salt = 12;
@@ -30,5 +34,15 @@ describe('Bcrypt Adapter', () => {
     const hashedValue = await sut.hash('any_value');
 
     expect(hashedValue).toBe('hashed_value');
+  });
+
+  test('Should be able to call bcrypt with correct values', async () => {
+    const sut = makeSut();
+
+    const compareSpy = jest.spyOn(bcrypt, 'compare');
+
+    await sut.compare('any_value', 'any_hash');
+
+    expect(compareSpy).toHaveBeenCalledWith('any_value', 'any_hash');
   });
 });
