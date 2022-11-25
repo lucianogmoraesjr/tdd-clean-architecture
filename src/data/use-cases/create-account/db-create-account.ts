@@ -14,8 +14,15 @@ export class DbCreateAccount implements CreateAccount {
     private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository,
   ) {}
 
-  async execute(accountData: CreateAccountDTO): Promise<Account> {
-    await this.loadAccountByEmailRepository.loadByEmail(accountData.email);
+  async execute(accountData: CreateAccountDTO): Promise<Account | null> {
+    const emailExists = await this.loadAccountByEmailRepository.loadByEmail(
+      accountData.email,
+    );
+
+    if (emailExists) {
+      return null;
+    }
+
     const hashedPassword = await this.hasher.hash(accountData.password);
 
     const newAccount = { ...accountData, password: hashedPassword };
