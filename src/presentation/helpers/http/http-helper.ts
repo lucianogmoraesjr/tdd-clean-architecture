@@ -8,7 +8,7 @@ export const ok = (data: any): HttpResponse => ({
 
 export const created = (): HttpResponse => ({
   statusCode: 201,
-  body: null,
+  body: [],
 });
 
 export const badRequest = (error: Error): HttpResponse => ({
