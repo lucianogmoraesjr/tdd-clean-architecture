@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 
-import { badRequest } from '../../helpers/http/http-helper';
+import { badRequest, serverError } from '../../helpers/http/http-helper';
 import { CreateSurveyController } from './create-survey-controller';
 import {
   CreateSurvey,
@@ -88,5 +88,15 @@ describe('CreateSurvey Controller', () => {
     await sut.handle(makeFakeRequest());
 
     expect(createSurveySpy).toHaveBeenCalledWith(makeFakeRequest().body);
+  });
+
+  test('Should be able to return 500 if CreateSurvey throws an exception', async () => {
+    const { sut, createSurveyStub } = makeSut();
+
+    jest.spyOn(createSurveyStub, 'create').mockRejectedValueOnce(new Error());
+
+    const httpResponse = await sut.handle(makeFakeRequest());
+
+    expect(httpResponse).toEqual(serverError(new Error()));
   });
 });
