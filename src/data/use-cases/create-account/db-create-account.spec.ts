@@ -50,7 +50,7 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
     implements LoadAccountByEmailRepository
   {
     async loadByEmail(email: string): Promise<Account | null> {
-      return Promise.resolve(makeFakeAccount());
+      return Promise.resolve(null);
     }
   }
 
@@ -118,6 +118,18 @@ describe('DbCreateAccount UseCase', () => {
     });
   });
 
+  test('Should be able to throw if CreateAccountRepository throws', async () => {
+    const { sut, createAccountRepositoryStub } = makeSut();
+
+    jest
+      .spyOn(createAccountRepositoryStub, 'create')
+      .mockImplementationOnce(() => {
+        throw new Error();
+      });
+
+    await expect(sut.execute(makeFakeAccountData())).rejects.toThrow();
+  });
+
   test('Should be able to return an account on success', async () => {
     const { sut } = makeSut();
 
@@ -134,5 +146,17 @@ describe('DbCreateAccount UseCase', () => {
     await sut.execute(makeFakeAccountData());
 
     expect(loadSpy).toHaveBeenCalledWith('valid_email@mail.com');
+  });
+
+  test('Should be able to return null if LoadAccountByEmailRepository not returns null', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut();
+
+    jest
+      .spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
+      .mockResolvedValueOnce(makeFakeAccount());
+
+    const newAccount = await sut.execute(makeFakeAccountData());
+
+    expect(newAccount).toBeNull();
   });
 });
