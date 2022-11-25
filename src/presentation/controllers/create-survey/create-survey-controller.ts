@@ -1,4 +1,8 @@
-import { badRequest, ok, serverError } from '../../helpers/http/http-helper';
+import {
+  badRequest,
+  created,
+  serverError,
+} from '../../helpers/http/http-helper';
 import {
   Controller,
   CreateSurvey,
@@ -25,7 +29,7 @@ export class CreateSurveyController implements Controller {
 
       await this.createSurvey.create({ question, answers });
 
-      return ok({ ok: 'ok' });
+      return created();
     } catch (error) {
       return serverError(error as Error);
     }
