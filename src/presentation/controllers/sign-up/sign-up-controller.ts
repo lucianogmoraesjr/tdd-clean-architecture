@@ -1,7 +1,13 @@
 import { CreateAccount } from '../../../domain/use-cases/create-account';
-import { badRequest, ok, serverError } from '../../helpers/http/http-helper';
+import { EmailInUseError } from '../../errors/email-in-use-error';
 import { Controller, HttpRequest, HttpResponse } from '../../protocols';
 import { Authentication, Validation } from './sign-up-controller-protocols';
+import {
+  badRequest,
+  forbidden,
+  ok,
+  serverError,
+} from '../../helpers/http/http-helper';
 
 export class SignUpController implements Controller {
   constructor(
@@ -25,6 +31,10 @@ export class SignUpController implements Controller {
         email,
         password,
       });
+
+      if (!account) {
+        return forbidden(new EmailInUseError());
+      }
 
       const accessToken = await this.authentication.execute({
         email,

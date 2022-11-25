@@ -7,5 +7,5 @@ export interface CreateAccountDTO {
 }
 
 export interface CreateAccount {
-  execute(account: CreateAccountDTO): Promise<Account>;
+  execute(account: CreateAccountDTO): Promise<Account | null>;
 }
