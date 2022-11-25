@@ -1,7 +1,10 @@
 /* eslint-disable max-classes-per-file */
-
-import { badRequest, serverError } from '../../helpers/http/http-helper';
 import { CreateSurveyController } from './create-survey-controller';
+import {
+  badRequest,
+  created,
+  serverError,
+} from '../../helpers/http/http-helper';
 import {
   CreateSurvey,
   CreateSurveyDTO,
@@ -98,5 +101,13 @@ describe('CreateSurvey Controller', () => {
     const httpResponse = await sut.handle(makeFakeRequest());
 
     expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
+  test('Should be able to return 201 created on success', async () => {
+    const { sut } = makeSut();
+
+    const httpResponse = await sut.handle(makeFakeRequest());
+
+    expect(httpResponse).toEqual(created());
   });
 });
