@@ -1,13 +1,14 @@
 /* eslint-disable max-classes-per-file */
 import { Account } from '../../../domain/entities/account';
+import { MissingParamError, ServerError } from '../../errors';
 import { SignUpController } from './sign-up-controller';
+import { EmailInUseError } from '../../errors/email-in-use-error';
 import {
   serverError,
   ok,
   badRequest,
   forbidden,
 } from '../../helpers/http/http-helper';
-import { MissingParamError, ServerError } from '../../errors';
 import {
   CreateAccount,
   CreateAccountDTO,
@@ -18,7 +19,6 @@ import {
   HttpRequest,
   Validation,
 } from './sign-up-controller-protocols';
-import { EmailInUseError } from '../../errors/email-in-use-error';
 
 const makeCreateAccountStub = (): CreateAccount => {
   class CreateAccountStub implements CreateAccount {

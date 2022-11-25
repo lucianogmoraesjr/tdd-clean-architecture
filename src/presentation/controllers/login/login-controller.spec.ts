@@ -1,12 +1,12 @@
 /* eslint-disable max-classes-per-file */
 import { LoginController } from './login-controller';
+import { MissingParamError } from '../../errors';
 import {
   HttpRequest,
   Authentication,
   Validation,
   AuthenticationDTO,
 } from './login-controller-protocols';
-import { MissingParamError } from '../../errors';
 import {
   badRequest,
   ok,
