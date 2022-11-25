@@ -1,7 +1,12 @@
 /* eslint-disable max-classes-per-file */
 import { Account } from '../../../domain/entities/account';
 import { SignUpController } from './sign-up-controller';
-import { serverError, ok, badRequest } from '../../helpers/http/http-helper';
+import {
+  serverError,
+  ok,
+  badRequest,
+  forbidden,
+} from '../../helpers/http/http-helper';
 import { MissingParamError, ServerError } from '../../errors';
 import {
   CreateAccount,
@@ -13,10 +18,11 @@ import {
   HttpRequest,
   Validation,
 } from './sign-up-controller-protocols';
+import { EmailInUseError } from '../../errors/email-in-use-error';
 
 const makeCreateAccountStub = (): CreateAccount => {
   class CreateAccountStub implements CreateAccount {
-    async execute(account: CreateAccountDTO): Promise<Account> {
+    async execute(account: CreateAccountDTO): Promise<Account | null> {
       return Promise.resolve(makeFakeAccount());
     }
   }
@@ -107,6 +113,15 @@ describe('SignUp Controller', () => {
 
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(serverError(new ServerError('')));
+  });
+
+  test('Should be able to return 403 if CreateAccount returns null', async () => {
+    const { sut, createAccountStub } = makeSut();
+
+    jest.spyOn(createAccountStub, 'execute').mockResolvedValueOnce(null);
+
+    const httpResponse = await sut.handle(makeFakeRequest());
+    expect(httpResponse).toEqual(forbidden(new EmailInUseError()));
   });
 
   test('Should be able to return 200 if valid data is provided', async () => {
