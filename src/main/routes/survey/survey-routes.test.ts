@@ -15,7 +15,7 @@ describe('Survey Routes', () => {
     await MongoHelper.disconnect();
   });
 
-  test('Should be able to return 201 on create survey success', async () => {
+  test('Should be able to return 403 on create survey without access token', async () => {
     await request(app)
       .post('/api/survey')
       .send({
@@ -30,6 +30,6 @@ describe('Survey Routes', () => {
           },
         ],
       })
-      .expect(201);
+      .expect(403);
   });
 });
