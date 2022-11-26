@@ -17,20 +17,18 @@ export class AuthMiddleware implements Middleware {
     try {
       const accessToken = httpRequest.headers?.['x-access-token'];
 
-      if (!accessToken) {
-        return forbidden(new AccessDeniedError());
+      if (accessToken) {
+        const account = await this.loadAccountByToken.load(
+          accessToken,
+          this.role,
+        );
+
+        if (account) {
+          return ok({ accountId: account.id });
+        }
       }
 
-      const account = await this.loadAccountByToken.load(
-        accessToken,
-        this.role,
-      );
-
-      if (!account) {
-        return forbidden(new AccessDeniedError());
-      }
-
-      return ok({ accountId: account.id });
+      return forbidden(new AccessDeniedError());
     } catch (error) {
       return serverError(error as Error);
     }
