@@ -5,6 +5,10 @@ jest.mock('jsonwebtoken', () => ({
   async sign(): Promise<string> {
     return 'any_token';
   },
+
+  async verify(): Promise<string> {
+    return 'any_data';
+  },
 }));
 
 interface SutTypes {
@@ -43,5 +47,12 @@ describe('JWT Adapter', () => {
     });
 
     await expect(sut.encrypt('any_id')).rejects.toThrow();
+  });
+
+  test('Should be able to call verify with correct values', async () => {
+    const { sut } = makeSut();
+    const verifySpy = jest.spyOn(jwt, 'verify');
+    await sut.decrypt('any_token');
+    expect(verifySpy).toHaveBeenCalledWith('any_token', 'secret');
   });
 });
