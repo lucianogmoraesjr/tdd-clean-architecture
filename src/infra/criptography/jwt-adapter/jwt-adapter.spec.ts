@@ -55,4 +55,10 @@ describe('JWT Adapter', () => {
     await sut.decrypt('any_token');
     expect(verifySpy).toHaveBeenCalledWith('any_token', 'secret');
   });
+
+  test('Should be able to return an access token on sign success', async () => {
+    const { sut } = makeSut();
+    const data = await sut.decrypt('any_token');
+    expect(data).toBe('any_data');
+  });
 });
