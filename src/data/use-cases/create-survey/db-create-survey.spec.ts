@@ -1,3 +1,4 @@
+import MockDate from 'mockdate';
 import { DbCreateSurvey } from './db-create-survey';
 import {
   CreateSurveyDTO,
@@ -12,6 +13,7 @@ const makeFakeSurveyData = (): CreateSurveyDTO => ({
       answer: 'any_answer',
     },
   ],
+  date: new Date(),
 });
 
 const makeCreateSurveyRepositoryStub = (): CreateSurveyRepository => {
@@ -40,14 +42,24 @@ const makeSut = (): SutTypes => {
 };
 
 describe('DbCreateSurvey UseCase', () => {
+  beforeAll(() => {
+    MockDate.set(new Date());
+  });
+
+  beforeAll(() => {
+    MockDate.reset();
+  });
+
   test('Should be able to call CreateSurveyRepository with correct values', async () => {
     const { sut, createSurveyRepository } = makeSut();
 
     const createSpy = jest.spyOn(createSurveyRepository, 'create');
 
-    await sut.create(makeFakeSurveyData());
+    const surveyData = makeFakeSurveyData();
 
-    expect(createSpy).toHaveBeenCalledWith(makeFakeSurveyData());
+    await sut.create(surveyData);
+
+    expect(createSpy).toHaveBeenCalledWith(surveyData);
   });
 
   test('Should be able to throw if CreateSurveyRepository throws an exception', async () => {

@@ -27,7 +27,7 @@ export class CreateSurveyController implements Controller {
 
       const { question, answers } = httpRequest.body;
 
-      await this.createSurvey.create({ question, answers });
+      await this.createSurvey.create({ question, answers, date: new Date() });
 
       return created();
     } catch (error) {

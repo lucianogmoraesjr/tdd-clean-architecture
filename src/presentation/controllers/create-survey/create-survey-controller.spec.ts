@@ -1,4 +1,5 @@
 /* eslint-disable max-classes-per-file */
+import MockDate from 'mockdate';
 import { CreateSurveyController } from './create-survey-controller';
 import {
   badRequest,
@@ -21,6 +22,7 @@ const makeFakeRequest = (): HttpRequest => ({
         answer: 'any_answer',
       },
     ],
+    date: new Date(),
   },
 });
 
@@ -63,14 +65,24 @@ const makeSut = (): SutTypes => {
 };
 
 describe('CreateSurvey Controller', () => {
+  beforeAll(() => {
+    MockDate.set(new Date());
+  });
+
+  beforeAll(() => {
+    MockDate.reset();
+  });
+
   test('Should be able to call Validation with correct values', async () => {
     const { sut, validationStub } = makeSut();
 
     const validateSpy = jest.spyOn(validationStub, 'validate');
 
-    await sut.handle(makeFakeRequest());
+    const request = makeFakeRequest();
 
-    expect(validateSpy).toHaveBeenCalledWith(makeFakeRequest().body);
+    await sut.handle(request);
+
+    expect(validateSpy).toHaveBeenCalledWith(request.body);
   });
 
   test('Should be able to return 400 if Validation fails', async () => {
@@ -88,9 +100,11 @@ describe('CreateSurvey Controller', () => {
 
     const createSurveySpy = jest.spyOn(createSurveyStub, 'create');
 
-    await sut.handle(makeFakeRequest());
+    const request = makeFakeRequest();
 
-    expect(createSurveySpy).toHaveBeenCalledWith(makeFakeRequest().body);
+    await sut.handle(request);
+
+    expect(createSurveySpy).toHaveBeenCalledWith(request.body);
   });
 
   test('Should be able to return 500 if CreateSurvey throws an exception', async () => {
