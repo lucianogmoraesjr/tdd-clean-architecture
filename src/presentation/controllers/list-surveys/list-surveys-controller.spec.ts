@@ -1,5 +1,5 @@
 import MockDate from 'mockdate';
-import { ok } from '../../helpers/http/http-helper';
+import { ok, serverError } from '../../helpers/http/http-helper';
 import { ListSurveysController } from './list-surveys-controller';
 import { Survey, ListSurveys } from './list-surveys-controller-protocols';
 
@@ -78,5 +78,15 @@ describe('ListSurvey Controller', () => {
     const httpResponse = await sut.handle({});
 
     expect(httpResponse).toEqual(ok(makeFakeSurveys()));
+  });
+
+  test('Should be able to return 500 if ListSurveys throws an exception', async () => {
+    const { sut, listSurveysStub } = makeSut();
+
+    jest.spyOn(listSurveysStub, 'list').mockRejectedValueOnce(new Error());
+
+    const httpResponse = await sut.handle({});
+
+    expect(httpResponse).toEqual(serverError(new Error()));
   });
 });
