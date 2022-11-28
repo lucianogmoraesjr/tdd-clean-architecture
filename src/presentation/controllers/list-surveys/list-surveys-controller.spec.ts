@@ -1,4 +1,5 @@
 import MockDate from 'mockdate';
+import { ok } from '../../helpers/http/http-helper';
 import { ListSurveysController } from './list-surveys-controller';
 import { Survey, ListSurveys } from './list-surveys-controller-protocols';
 
@@ -61,7 +62,7 @@ describe('ListSurvey Controller', () => {
     MockDate.reset();
   });
 
-  test('Should call ListSurveys', async () => {
+  test('Should be able to call ListSurveys', async () => {
     const { sut, listSurveysStub } = makeSut();
 
     const listSpy = jest.spyOn(listSurveysStub, 'list');
@@ -69,5 +70,13 @@ describe('ListSurvey Controller', () => {
     await sut.handle({});
 
     expect(listSpy).toHaveBeenCalled();
+  });
+
+  test('Should be able to return 200 on success', async () => {
+    const { sut } = makeSut();
+
+    const httpResponse = await sut.handle({});
+
+    expect(httpResponse).toEqual(ok(makeFakeSurveys()));
   });
 });
