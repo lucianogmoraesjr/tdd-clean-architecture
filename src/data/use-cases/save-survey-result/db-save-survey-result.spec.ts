@@ -61,4 +61,10 @@ describe('DbSaveSurveyResult', () => {
     await sut.save(makeFakeSurveyResultData());
     expect(saveSpy).toHaveBeenCalledWith(makeFakeSurveyResultData());
   });
+
+  test('Should be able to return a survey result on SaveSurveyResultRepository success', async () => {
+    const { sut } = makeSut();
+    const surveyResult = await sut.save(makeFakeSurveyResultData());
+    expect(surveyResult).toEqual(makeFakeSurveyResult());
+  });
 });
