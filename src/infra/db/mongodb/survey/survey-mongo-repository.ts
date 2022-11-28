@@ -1,13 +1,18 @@
+import { ObjectId } from 'mongodb';
 import { ListSurveysRepository } from '../../../../data/protocols/db/survey/list-surveys-repository';
 import {
   CreateSurveyDTO,
   CreateSurveyRepository,
 } from '../../../../data/use-cases/create-survey/db-create-survey-protocols';
+import { LoadSurveyByIdRepository } from '../../../../data/use-cases/load-survey-by-id/db-load-survey-by-id-protocols';
 import { Survey } from '../../../../domain/entities/survey';
 import MongoHelper from '../helpers/mongo-helper';
 
 export class SurveyMongoRepository
-  implements CreateSurveyRepository, ListSurveysRepository
+  implements
+    CreateSurveyRepository,
+    ListSurveysRepository,
+    LoadSurveyByIdRepository
 {
   async create(surveyData: CreateSurveyDTO): Promise<void> {
     const surveyCollection = await MongoHelper.getCollection('surveys');
@@ -32,5 +37,19 @@ export class SurveyMongoRepository
     }
 
     return surveys;
+  }
+
+  async loadById(id: string): Promise<Survey> {
+    const surveyCollection = await MongoHelper.getCollection('surveys');
+    const surveyMongoResult = await surveyCollection.findOne(new ObjectId(id));
+
+    const { _id, ...rest } = surveyMongoResult as any;
+
+    const survey: Survey = {
+      ...rest,
+      id: _id.toString(),
+    };
+
+    return survey;
   }
 }
