@@ -1,5 +1,5 @@
 import MockDate from 'mockdate';
-import { ok, serverError } from '../../helpers/http/http-helper';
+import { noContent, ok, serverError } from '../../helpers/http/http-helper';
 import { ListSurveysController } from './list-surveys-controller';
 import { Survey, ListSurveys } from './list-surveys-controller-protocols';
 
@@ -78,6 +78,16 @@ describe('ListSurvey Controller', () => {
     const httpResponse = await sut.handle({});
 
     expect(httpResponse).toEqual(ok(makeFakeSurveys()));
+  });
+
+  test('Should be able to return 204 if ListSurveys returns no content', async () => {
+    const { sut, listSurveysStub } = makeSut();
+
+    jest.spyOn(listSurveysStub, 'list').mockResolvedValueOnce([]);
+
+    const httpResponse = await sut.handle({});
+
+    expect(httpResponse).toEqual(noContent());
   });
 
   test('Should be able to return 500 if ListSurveys throws an exception', async () => {
