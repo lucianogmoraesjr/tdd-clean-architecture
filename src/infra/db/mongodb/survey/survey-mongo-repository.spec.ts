@@ -89,4 +89,23 @@ describe('Survey Mongo Repository', () => {
 
     expect(surveys.length).toBe(0);
   });
+
+  test('Should be able to list surveys', async () => {
+    const { sut } = makeSut();
+
+    const result = await surveyCollection.insertOne({
+      question: 'any_question',
+      answers: [
+        {
+          image: 'any_image',
+          answer: 'any_answer',
+        },
+      ],
+      date: new Date(),
+    });
+
+    const survey = await sut.loadById(result.insertedId.toString());
+
+    expect(survey).toBeTruthy();
+  });
 });
