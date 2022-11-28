@@ -81,4 +81,44 @@ describe('Survey Routes', () => {
   test('Should be able to return 403 on list surveys without access token', async () => {
     await request(app).get('/api/survey').expect(403);
   });
+
+  test('Should be able to return 200 on list surveys with access token', async () => {
+    const result = await accountCollection.insertOne({
+      name: 'John',
+      email: 'john@mail.com',
+      password: '123',
+    });
+
+    const id = result.insertedId.toString();
+
+    const accessToken = sign({ id }, 'teste123');
+
+    await accountCollection.updateOne(
+      {
+        _id: result.insertedId,
+      },
+      {
+        $set: {
+          accessToken,
+        },
+      },
+    );
+
+    await surveyCollection.insertOne({
+      id: 'any_id',
+      question: 'any_question',
+      answers: [
+        {
+          image: 'any_image',
+          answer: 'any_answer',
+        },
+      ],
+      date: new Date(),
+    });
+
+    await request(app)
+      .get('/api/survey')
+      .set('x-access-token', accessToken)
+      .expect(200);
+  });
 });
