@@ -1,12 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { ListSurveysRepository } from '../../../../data/protocols/db/survey/list-surveys-repository';
+import { LoadSurveyByIdRepository } from '../../../../data/use-cases/load-survey-by-id/db-load-survey-by-id-protocols';
+import { Survey } from '../../../../domain/entities/survey';
+import MongoHelper from '../helpers/mongo-helper';
 import {
   CreateSurveyDTO,
   CreateSurveyRepository,
 } from '../../../../data/use-cases/create-survey/db-create-survey-protocols';
-import { LoadSurveyByIdRepository } from '../../../../data/use-cases/load-survey-by-id/db-load-survey-by-id-protocols';
-import { Survey } from '../../../../domain/entities/survey';
-import MongoHelper from '../helpers/mongo-helper';
 
 export class SurveyMongoRepository
   implements

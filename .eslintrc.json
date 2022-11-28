@@ -27,6 +27,7 @@
     "import/no-extraneous-dependencies": "off",
     "no-use-before-define": "off",
     "no-restricted-syntax": "off",
+    "no-underscore-dangle": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
