@@ -1,6 +1,5 @@
-import { Survey } from '../../../domain/entities/survey';
-import { ListSurveysRepository } from '../../protocols/db/survey/list-surveys-repository';
 import { DbListSurveys } from './db-list-surveys';
+import { Survey, ListSurveysRepository } from './db-list-surveys-protocols';
 
 const makeFakeSurveys = (): Survey[] => [
   {
