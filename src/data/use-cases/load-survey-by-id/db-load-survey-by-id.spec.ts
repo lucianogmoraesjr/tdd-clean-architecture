@@ -1,3 +1,4 @@
+import MockDate from 'mockdate';
 import { Survey } from '../../../domain/entities/survey';
 import { LoadSurveyByIdRepository } from '../../protocols/db/survey/load-survey-by-id-repository';
 import { DbLoadSurveyById } from './db-load-survey-by-id';
@@ -40,6 +41,14 @@ const makeSut = (): SutTypes => {
 };
 
 describe('DbLoadSurveyId', () => {
+  beforeAll(() => {
+    MockDate.set(new Date());
+  });
+
+  afterAll(() => {
+    MockDate.reset();
+  });
+
   test('Should be able to call LoadSurveyByIdRepository', async () => {
     const { sut, loadSurveyByIdRepositoryStub } = makeSut();
     const loadByIdSpy = jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById');
@@ -47,5 +56,13 @@ describe('DbLoadSurveyId', () => {
     await sut.loadById('any_id');
 
     expect(loadByIdSpy).toHaveBeenCalledWith('any_id');
+  });
+
+  test('Should be able to call LoadSurveyByIdRepository', async () => {
+    const { sut } = makeSut();
+
+    const survey = await sut.loadById('any_id');
+
+    expect(survey).toEqual(makeFakeSurvey());
   });
 });
