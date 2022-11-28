@@ -1,7 +1,4 @@
-export interface SurveyAnswer {
-  image?: string;
-  answer: string;
-}
+import { SurveyAnswer } from '../entities/survey';
 
 export interface CreateSurveyDTO {
   question: string;

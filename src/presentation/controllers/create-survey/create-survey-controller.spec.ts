@@ -69,7 +69,7 @@ describe('CreateSurvey Controller', () => {
     MockDate.set(new Date());
   });
 
-  beforeAll(() => {
+  afterAll(() => {
     MockDate.reset();
   });
 
@@ -78,11 +78,9 @@ describe('CreateSurvey Controller', () => {
 
     const validateSpy = jest.spyOn(validationStub, 'validate');
 
-    const request = makeFakeRequest();
+    await sut.handle(makeFakeRequest());
 
-    await sut.handle(request);
-
-    expect(validateSpy).toHaveBeenCalledWith(request.body);
+    expect(validateSpy).toHaveBeenCalledWith(makeFakeRequest().body);
   });
 
   test('Should be able to return 400 if Validation fails', async () => {
@@ -100,11 +98,9 @@ describe('CreateSurvey Controller', () => {
 
     const createSurveySpy = jest.spyOn(createSurveyStub, 'create');
 
-    const request = makeFakeRequest();
+    await sut.handle(makeFakeRequest());
 
-    await sut.handle(request);
-
-    expect(createSurveySpy).toHaveBeenCalledWith(request.body);
+    expect(createSurveySpy).toHaveBeenCalledWith(makeFakeRequest().body);
   });
 
   test('Should be able to return 500 if CreateSurvey throws an exception', async () => {

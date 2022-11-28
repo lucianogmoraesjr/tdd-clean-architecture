@@ -46,7 +46,7 @@ describe('DbCreateSurvey UseCase', () => {
     MockDate.set(new Date());
   });
 
-  beforeAll(() => {
+  afterAll(() => {
     MockDate.reset();
   });
 
@@ -55,11 +55,9 @@ describe('DbCreateSurvey UseCase', () => {
 
     const createSpy = jest.spyOn(createSurveyRepository, 'create');
 
-    const surveyData = makeFakeSurveyData();
+    await sut.create(makeFakeSurveyData());
 
-    await sut.create(surveyData);
-
-    expect(createSpy).toHaveBeenCalledWith(surveyData);
+    expect(createSpy).toHaveBeenCalledWith(makeFakeSurveyData());
   });
 
   test('Should be able to throw if CreateSurveyRepository throws an exception', async () => {
