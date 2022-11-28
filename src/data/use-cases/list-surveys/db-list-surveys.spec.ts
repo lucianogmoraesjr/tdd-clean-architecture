@@ -53,7 +53,7 @@ const makeSut = (): SutTypes => {
 };
 
 describe('DbListSurveys', () => {
-  test('Should be able to call ListSurveys', async () => {
+  test('Should be able to call ListSurveysRepository', async () => {
     const { sut, listSurveysRepositoryStub } = makeSut();
     const listSpy = jest.spyOn(listSurveysRepositoryStub, 'list');
 
@@ -69,5 +69,14 @@ describe('DbListSurveys', () => {
     await sut.list();
 
     expect(listSpy).toHaveBeenCalled();
+  });
+
+  test('Should be able to throw if ListSurveysRepository throws an exception', async () => {
+    const { sut, listSurveysRepositoryStub } = makeSut();
+    jest
+      .spyOn(listSurveysRepositoryStub, 'list')
+      .mockRejectedValueOnce(new Error());
+
+    await expect(sut.list()).rejects.toThrow();
   });
 });
