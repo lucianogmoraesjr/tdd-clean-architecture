@@ -11,6 +11,11 @@ export const created = (): HttpResponse => ({
   body: [],
 });
 
+export const noContent = (): HttpResponse => ({
+  statusCode: 204,
+  body: [],
+});
+
 export const badRequest = (error: Error): HttpResponse => ({
   statusCode: 400,
   body: { error: error.message },
