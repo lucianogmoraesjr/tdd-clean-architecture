@@ -67,4 +67,12 @@ describe('DbSaveSurveyResult', () => {
     const surveyResult = await sut.save(makeFakeSurveyResultData());
     expect(surveyResult).toEqual(makeFakeSurveyResult());
   });
+
+  test('Should be able to throw if SaveSurveyResultRepository throws an exception', async () => {
+    const { sut, saveSurveyResultRepositoryStub } = makeSut();
+    jest
+      .spyOn(saveSurveyResultRepositoryStub, 'save')
+      .mockRejectedValueOnce(new Error());
+    await expect(sut.save(makeFakeSurveyResultData())).rejects.toThrow();
+  });
 });
