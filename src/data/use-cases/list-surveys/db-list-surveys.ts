@@ -6,8 +6,8 @@ export class DbListSurveys implements ListSurveys {
   constructor(private readonly listSurveysRepository: ListSurveysRepository) {}
 
   async list(): Promise<Survey[]> {
-    await this.listSurveysRepository.list();
+    const surveys = await this.listSurveysRepository.list();
 
-    return [];
+    return surveys;
   }
 }
