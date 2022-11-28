@@ -77,4 +77,8 @@ describe('Survey Routes', () => {
       })
       .expect(201);
   });
+
+  test('Should be able to return 403 on list surveys without access token', async () => {
+    await request(app).get('/api/survey').expect(403);
+  });
 });
