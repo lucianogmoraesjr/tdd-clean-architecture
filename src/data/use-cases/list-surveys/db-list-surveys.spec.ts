@@ -29,7 +29,7 @@ const makeFakeSurveys = (): Survey[] => [
 
 const makeListSurveysRepository = (): ListSurveysRepository => {
   class ListSurveysRepositoryStub implements ListSurveysRepository {
-    async list(): Promise<Survey[] | undefined> {
+    async list(): Promise<Survey[]> {
       return Promise.resolve(makeFakeSurveys());
     }
   }
@@ -54,6 +54,15 @@ const makeSut = (): SutTypes => {
 
 describe('DbListSurveys', () => {
   test('Should be able to call ListSurveys', async () => {
+    const { sut, listSurveysRepositoryStub } = makeSut();
+    const listSpy = jest.spyOn(listSurveysRepositoryStub, 'list');
+
+    await sut.list();
+
+    expect(listSpy).toHaveBeenCalled();
+  });
+
+  test('Should be able to return a list of surveys on success', async () => {
     const { sut, listSurveysRepositoryStub } = makeSut();
     const listSpy = jest.spyOn(listSurveysRepositoryStub, 'list');
 
