@@ -10,7 +10,7 @@ export class ListSurveysController implements Controller {
   constructor(private readonly listSurveys: ListSurveys) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    await this.listSurveys.list();
-    return ok({ ok: 'ok' });
+    const surveys = await this.listSurveys.list();
+    return ok(surveys);
   }
 }
