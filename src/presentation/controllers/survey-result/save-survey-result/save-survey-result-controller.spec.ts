@@ -1,13 +1,15 @@
 /* eslint-disable max-classes-per-file */
+import MockDate from 'mockdate';
 import { Survey } from '../../../../domain/entities/survey';
 import { SurveyResult } from '../../../../domain/entities/survey-result';
+import { InvalidParamError } from '../../../errors';
+import { forbidden, ok, serverError } from '../../../helpers/http/http-helper';
+import { SaveSurveyResultController } from './save-survey-result-controller';
 import {
   SaveSurveyResult,
   SaveSurveyResultDTO,
 } from '../../../../domain/use-cases/save-survey-result';
-import { InvalidParamError } from '../../../errors';
-import { forbidden, serverError } from '../../../helpers/http/http-helper';
-import { SaveSurveyResultController } from './save-survey-result-controller';
+
 import {
   HttpRequest,
   LoadSurveyById,
@@ -85,6 +87,14 @@ const makeSut = (): SutTypes => {
 };
 
 describe('SaveSurveyResult Controller', () => {
+  beforeAll(() => {
+    MockDate.set(new Date());
+  });
+
+  afterAll(() => {
+    MockDate.reset();
+  });
+
   test('Should be able to call LoadSurveyById with correct values', async () => {
     const { sut, loadSurveyByIdStub } = makeSut();
     const loadByIdSpy = jest.spyOn(loadSurveyByIdStub, 'loadById');
@@ -150,5 +160,13 @@ describe('SaveSurveyResult Controller', () => {
     const httpResponse = await sut.handle(makeFakeRequest());
 
     expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
+  test('Should be able to return 200 on success', async () => {
+    const { sut } = makeSut();
+
+    const httpResponse = await sut.handle(makeFakeRequest());
+
+    expect(httpResponse).toEqual(ok(makeFakeSurveyResult()));
   });
 });
