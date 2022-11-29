@@ -1,5 +1,11 @@
-import { InvalidParamError } from '../../../errors';
-import { forbidden, ok, serverError } from '../../../helpers/http/http-helper';
+import { SaveSurveyResult } from '../../../../domain/use-cases/save-survey-result';
+import { InvalidParamError, UnauthorizedError } from '../../../errors';
+import {
+  forbidden,
+  ok,
+  serverError,
+  unauthorized,
+} from '../../../helpers/http/http-helper';
 import {
   Controller,
   LoadSurveyById,
@@ -8,12 +14,16 @@ import {
 } from './save-survey-result-controller-protocols';
 
 export class SaveSurveyResultController implements Controller {
-  constructor(private readonly loadSurveyById: LoadSurveyById) {}
+  constructor(
+    private readonly loadSurveyById: LoadSurveyById,
+    private readonly saveSurveyResult: SaveSurveyResult,
+  ) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const { surveyId } = httpRequest.params;
       const { answer } = httpRequest.body;
+      const { accountId } = httpRequest;
 
       const survey = await this.loadSurveyById.loadById(surveyId);
 
@@ -26,6 +36,13 @@ export class SaveSurveyResultController implements Controller {
       if (!answers.includes(answer)) {
         return forbidden(new InvalidParamError('answer'));
       }
+
+      await this.saveSurveyResult.save({
+        accountId: accountId || '',
+        surveyId,
+        answer,
+        date: new Date(),
+      });
 
       return ok(survey);
     } catch (error) {

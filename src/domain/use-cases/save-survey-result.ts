@@ -7,6 +7,6 @@ export interface SaveSurveyResultDTO {
   date: Date;
 }
 
-export interface CreateSurvey {
-  create(data: SaveSurveyResultDTO): Promise<SurveyResult>;
+export interface SaveSurveyResult {
+  save(data: SaveSurveyResultDTO): Promise<SurveyResult>;
 }
