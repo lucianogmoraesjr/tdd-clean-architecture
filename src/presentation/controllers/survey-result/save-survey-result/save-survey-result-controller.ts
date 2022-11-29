@@ -1,4 +1,5 @@
-import { ok } from '../../../helpers/http/http-helper';
+import { InvalidParamError } from '../../../errors';
+import { forbidden, ok } from '../../../helpers/http/http-helper';
 import {
   Controller,
   LoadSurveyById,
@@ -13,6 +14,10 @@ export class SaveSurveyResultController implements Controller {
     const survey = await this.loadSurveyById.loadById(
       httpRequest.params.surveyId,
     );
+
+    if (!survey) {
+      return forbidden(new InvalidParamError('surveyId'));
+    }
 
     return ok(survey);
   }
