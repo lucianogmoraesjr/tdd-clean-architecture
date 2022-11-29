@@ -2,7 +2,7 @@ import { SurveyResult } from '../entities/survey-result';
 
 export interface SaveSurveyResultDTO {
   surveyId: string;
-  accountId: string;
+  accountId?: string;
   answer: string;
   date: Date;
 }
